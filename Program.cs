@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+// ADD THIS
+builder.WebHost.UseUrls("http://0.0.0.0:10000");
 #region DATABASE
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
     options.UseNpgsql(
