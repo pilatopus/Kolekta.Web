@@ -9,26 +9,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-// ADD THIS
+
 #region DATABASE
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
-#endregion
-
-#region SERVICES
-builder.Services.AddScoped<DemoUserService>();
-builder.Services.AddScoped<DemoInventoryService>();
-
-builder.Services.AddScoped<DropService>();
-
-builder.Services.AddSingleton<CharacterPoolBuilder>();
-builder.Services.AddSingleton<CharacterSeeder>();
-
-builder.Services.AddSingleton<HttpClient>();
-builder.Services.AddBlazoredSessionStorage();
 #endregion
 
 #region IDENTITY
@@ -42,8 +29,21 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 #endregion
 
-#region BLAZOR
-builder.Services.AddRazorComponents()
+#region SERVICES
+builder.Services.AddScoped<DemoUserService>();
+builder.Services.AddScoped<DemoInventoryService>();
+builder.Services.AddScoped<DropService>();
+
+builder.Services.AddSingleton<CharacterPoolBuilder>();
+builder.Services.AddSingleton<CharacterSeeder>();
+
+builder.Services.AddBlazoredSessionStorage();
+builder.Services.AddHttpClient();
+#endregion
+
+#region BLAZOR (IMPORTANT FIX HERE)
+builder.Services
+    .AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
@@ -51,44 +51,45 @@ builder.Services.AddCascadingAuthenticationState();
 
 var app = builder.Build();
 
-#region BACKGROUND CHARACTER SEED (NON-BLOCKING)
+#region BACKGROUND SEED (SAFE)
 _ = Task.Run(async () =>
 {
     try
     {
         using var scope = app.Services.CreateScope();
-
-        var seeder =
-            scope.ServiceProvider.GetRequiredService<CharacterSeeder>();
-
+        var seeder = scope.ServiceProvider.GetRequiredService<CharacterSeeder>();
         await seeder.SeedAsync();
     }
     catch
     {
-        // log later if needed
+        // ignore startup failure
     }
 });
 #endregion
 
-#region PIPELINE
+#region PIPELINE (CRITICAL FIXES)
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
-
 app.UseHttpsRedirection();
-app.UseAntiforgery();
+
+app.UseStaticFiles(); // 🔥 REQUIRED FOR _framework FILES
+
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseAntiforgery();
+
+// 🔥 THIS IS WHAT FIXES BLazor 404 ISSUES
 app.MapStaticAssets();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
-#endregion
 
 app.Run();
+#endregion
