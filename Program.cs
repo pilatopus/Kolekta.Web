@@ -18,6 +18,10 @@ builder.Services.AddDbContextFactory<AppDbContext>(options =>
 );
 #endregion
 
+// Railway PORT support
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 #region IDENTITY
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -74,7 +78,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 
 app.UseStaticFiles(); // 🔥 REQUIRED FOR _framework FILES
 
