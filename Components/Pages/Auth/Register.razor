@@ -1,0 +1,131 @@
+﻿@page "/register"
+
+@using System.ComponentModel.DataAnnotations
+@using Kolekta.Web.Models.User
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager Navigation
+
+<div class="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+
+    <div class="bg-zinc-900 p-8 rounded-2xl w-full max-w-md border border-gray-800">
+
+        <h1 class="text-3xl font-bold text-purple-400 mb-6">
+            Create Account
+        </h1>
+
+        <EditForm Model="model" OnValidSubmit="HandleRegister">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-red-400 mb-4" />
+
+            <!-- Email -->
+            <InputText @bind-Value="model.Email"
+                       placeholder="Email"
+                       class="w-full mb-3 p-3 rounded bg-gray-800 text-white" />
+
+            <ValidationMessage For="@(() => model.Email)" class="text-red-400 text-sm mb-2" />
+
+            <!-- Display Name -->
+            <InputText @bind-Value="model.DisplayName"
+                       placeholder="Display Name"
+                       class="w-full mb-3 p-3 rounded bg-gray-800 text-white" />
+
+            <ValidationMessage For="@(() => model.DisplayName)" class="text-red-400 text-sm mb-2" />
+
+            <!-- Password -->
+            <InputText @bind-Value="model.Password"
+                       type="password"
+                       placeholder="Password"
+                       class="w-full mb-3 p-3 rounded bg-gray-800 text-white" />
+
+            <ValidationMessage For="@(() => model.Password)" class="text-red-400 text-sm mb-2" />
+
+            <!-- Confirm Password -->
+            <InputText @bind-Value="model.ConfirmPassword"
+                       type="password"
+                       placeholder="Confirm Password"
+                       class="w-full mb-4 p-3 rounded bg-gray-800 text-white" />
+
+            <ValidationMessage For="@(() => model.ConfirmPassword)" class="text-red-400 text-sm mb-4" />
+
+            <!-- Submit -->
+            <button class="w-full bg-purple-600 hover:bg-purple-700 p-3 rounded text-white disabled:opacity-50"
+                    disabled="@isLoading">
+
+                @if (isLoading)
+                {
+                    <span>Creating account...</span>
+                }
+                else
+                {
+                    <span>Create Account</span>
+                }
+
+            </button>
+
+        </EditForm>
+
+        @if (!string.IsNullOrEmpty(serverError))
+        {
+            <p class="text-red-400 mt-4">@serverError</p>
+        }
+
+    </div>
+</div>
+
+@code {
+
+    private RegisterModel model = new();
+    private string serverError = "";
+    private bool isLoading = false;
+
+    private async Task HandleRegister()
+    {
+        serverError = "";
+        isLoading = true;
+
+        try
+        {
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                DisplayName = model.DisplayName
+            };
+
+            var result = await UserManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                Navigation.NavigateTo("/login");
+                return;
+            }
+
+            serverError = string.Join(", ", result.Errors.Select(e => e.Description));
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    public class RegisterModel
+    {
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
+        public string Email { get; set; } = "";
+
+        [Required(ErrorMessage = "Display name is required")]
+        [MinLength(2, ErrorMessage = "Display name too short")]
+        public string DisplayName { get; set; } = "";
+
+        [Required(ErrorMessage = "Password is required")]
+        [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
+        public string Password { get; set; } = "";
+
+        [Required]
+        [Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
+        public string ConfirmPassword { get; set; } = "";
+    }
+}

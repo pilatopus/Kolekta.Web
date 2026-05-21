@@ -1,0 +1,206 @@
+﻿@@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96d;
+    --gold-dim: #7a5f28;
+    --gold-faint: rgba(201,168,76,.08);
+    --bg-void: #07080d;
+    --bg-deep: #0d0f18;
+    --bg-panel: #111422;
+    --bg-sidebar: #0a0b14;
+    --border-dim: rgba(201,168,76,.12);
+    --border-mid: rgba(201,168,76,.22);
+    --text-ivory: #f0e8d0;
+    --text-muted: #7a7060;
+    --text-ghost: #3a3830;
+    --common-clr: #9ca3af;
+    --rare-clr: #60a5fa;
+    --epic-clr: #c084fc;
+    --legendary-clr: #fbbf24;
+}
+
+html, body {
+    height: 100%;
+    background: var(--bg-void);
+    color: var(--text-ivory);
+    font-family: 'Crimson Pro', Georgia, serif;
+}
+
+/* ── SHELL ── */
+.shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-dim);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
+}
+
+    /* subtle vertical grain line for depth */
+    .sidebar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -1px;
+        bottom: 0;
+        width: 1px;
+        background: linear-gradient(180deg, transparent 0%, var(--gold-dim) 30%, var(--gold-dim) 70%, transparent 100%);
+        opacity: .4;
+    }
+
+/* ── BRAND ── */
+.brand {
+    padding: 1.6rem 1.4rem 1.2rem;
+    border-bottom: 1px solid var(--border-dim);
+    position: relative;
+}
+
+.brand-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: .16em;
+    text-shadow: 0 0 30px rgba(232,201,109,.3);
+    line-height: 1;
+}
+
+.brand-sub {
+    font-family: 'Crimson Pro', serif;
+    font-size: .72rem;
+    font-style: italic;
+    color: var(--text-muted);
+    letter-spacing: .1em;
+    margin-top: .3rem;
+}
+
+.brand-line {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold-dim), transparent);
+    margin-top: 1rem;
+    opacity: .5;
+}
+
+/* ── NAV ── */
+.sidebar-nav {
+    flex: 1;
+    padding: 1.2rem .8rem;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.nav-label {
+    font-family: 'Cinzel', serif;
+    font-size: .58rem;
+    letter-spacing: .22em;
+    color: var(--text-ghost);
+    text-transform: uppercase;
+    padding: .6rem .6rem .3rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: .55rem .8rem;
+    font-family: 'Cinzel', serif;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: var(--text-muted);
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    transition: color .2s, background .2s, border-color .2s;
+    position: relative;
+    overflow: hidden;
+}
+
+    .nav-link:hover {
+        color: var(--gold-light);
+        background: var(--gold-faint);
+        border-color: var(--border-dim);
+    }
+
+    /* Blazor adds .active class on active NavLink */
+    .nav-link.active {
+        color: var(--gold-light);
+        background: linear-gradient(90deg, rgba(201,168,76,.12) 0%, transparent 100%);
+        border-color: var(--border-mid);
+    }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--gold-light), var(--gold-dim));
+        }
+
+.nav-icon {
+    font-size: 1rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* ── SIDEBAR FOOTER ── */
+.sidebar-footer {
+    padding: 1rem 1.4rem;
+    border-top: 1px solid var(--border-dim);
+}
+
+.sidebar-footer-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: .68rem;
+    font-style: italic;
+    color: var(--text-ghost);
+    letter-spacing: .06em;
+}
+
+.ornament-dots {
+    display: flex;
+    gap: .35rem;
+    margin-bottom: .5rem;
+}
+
+.ornament-dot {
+    width: 4px;
+    height: 4px;
+    background: var(--gold-dim);
+    transform: rotate(45deg);
+    opacity: .5;
+}
+
+/* ── MAIN CONTENT ── */
+.main-content {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    background: var(--bg-void);
+    /* subtle radial glow top-center */
+    background-image: radial-gradient(ellipse 60% 30% at 50% 0%, rgba(201,168,76,.04) 0%, transparent 70%);
+}
+
+.main-inner {
+    padding: 2rem 2rem 4rem;
+}

@@ -1,0 +1,143 @@
+﻿@page "/drop"
+@using Kolekta.Web.Models.Cards
+@inject Kolekta.Web.Services.Inventory.DemoInventoryService InventoryService
+@inject Kolekta.Web.Services.Drops.DropService DropService
+
+
+
+<div class="drop-page">
+
+    <!-- HEADER -->
+    <div class="drop-header">
+        <h1 class="drop-title">Drop Arena</h1>
+        <p class="drop-subtitle">Three cards fall. One belongs to you.</p>
+    </div>
+
+    <!-- DROP BUTTON -->
+    <div class="drop-btn-wrap">
+        <button class="drop-btn"
+                @onclick="DropCards"
+                disabled="@isDropping">
+            <span>@(isDropping ? "Summoning..." : "Drop Cards")</span>
+        </button>
+    </div>
+
+    <!-- ORNAMENT -->
+    <div class="ornament-divider">
+        <div class="ornament-diamond"></div>
+        <div class="ornament-diamond"></div>
+        <div class="ornament-diamond"></div>
+    </div>
+
+    <!-- CARDS -->
+    <div class="cards-grid">
+        @for (int i = 0; i < displayCards.Count; i++)
+        {
+            var c = displayCards[i];
+
+            if (c != null)
+            {
+                <div class="card-slot">
+
+                    <!-- CARD -->
+                    <div class="card-wrap rarity-@(c.Rarity.ToLower())-card">
+                        <!-- Art -->
+                        <img src="@c.ImageUrl"
+                             alt="@c.CharacterName"
+                             class="card-art" />
+
+                        <!-- Gradient overlays -->
+                        <div class="card-gradient-top"></div>
+                        <div class="card-gradient-bottom"></div>
+
+                        <!-- Name -->
+                        <div class="card-name">@c.CharacterName</div>
+
+                        <!-- Series -->
+                        <div class="card-series">@c.Series</div>
+                        <!--frames-->
+                        <img src="@GetFrameImage(@c.Rarity)"
+                             class="card-frame"
+                             alt="" />
+                    </div>
+
+                    <!-- RARITY -->
+                    <div class="@GetRarityBadge(c.Rarity) rarity-badge">@c.Rarity</div>
+
+                    <!-- CLAIM -->
+                    <button class="claim-btn" @onclick="() => PickCard(c)">
+                        <span>Claim</span>
+                    </button>
+
+                </div>
+            }
+            else
+            {
+                <div class="card-slot">
+                    <div class="card-skeleton"></div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- MESSAGE -->
+    @if (!string.IsNullOrWhiteSpace(message))
+    {
+        <div class="claim-message">
+            <span class="check">✦</span>@message
+        </div>
+    }
+
+</div>
+
+@code {
+
+    private List<Card?> displayCards = new() { null, null, null };
+    private List<Card> actualCards = new();
+
+    private bool isDropping = false;
+    private string message = "";
+
+    private async Task DropCards()
+    {
+        isDropping = true;
+        message = "";
+
+        displayCards = new List<Card?> { null, null, null };
+        StateHasChanged();
+
+        actualCards = await DropService.DropThreeCards();
+
+        for (int i = 0; i < actualCards.Count; i++)
+        {
+            await Task.Delay(500);
+            displayCards[i] = actualCards[i];
+            StateHasChanged();
+        }
+
+        isDropping = false;
+    }
+
+    private async Task PickCard(Card card)
+    {
+        await InventoryService.AddCard(card);
+        message = $"✦ {card.CharacterName} has been claimed.";
+        displayCards = new() { null, null, null };
+        StateHasChanged();
+    }
+
+    string GetRarityBadge(string rarity) => rarity?.ToLower() switch
+    {
+        "legendary" => "rarity-legendary",
+        "epic" => "rarity-epic",
+        "rare" => "rarity-rare",
+        _ => "rarity-common"
+    };
+    string GetFrameImage(string rarity) => rarity?.ToLower() switch
+    {
+        "legendary" => "/images/frames/5_frame.png",
+        "epic" => "/images/frames/4_frame.png",
+        "rare" => "/images/frames/3_frame.png",
+        _ => "/images/frames/2_frame.png"
+    };
+}

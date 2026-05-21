@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <ResourcePreloader />
+    <!-- Tailwind ONLY (main styling system) -->
+    <link href="css/output.css" rel="stylesheet" />
+    <link href="css/Styles/drop_Style.css" rel="stylesheet" />
+    <link href="css/Styles/menu_Home.css" rel="stylesheet" />
+    <link href="css/Styles/menu_Navbar.css" rel="stylesheet" />
+
+    <!-- Blazor CSS isolation (keep this) -->
+    <link rel="stylesheet" href="@Assets["Kolekta.Web.styles.css"]" />
+    <ImportMap />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <HeadOutlet @rendermode="InteractiveServer" />
+</head>
+
+<body>
+    <Routes @rendermode="InteractiveServer" />
+    <ReconnectModal />
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
+</body>
+
+</html>

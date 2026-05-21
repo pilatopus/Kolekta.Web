@@ -1,0 +1,499 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap');
+
+:root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96d;
+    --gold-dim: #7a5f28;
+    --bg-void: #07080d;
+    --bg-deep: #0d0f18;
+    --bg-panel: #111422;
+    --text-ivory: #f0e8d0;
+    --text-muted: #7a7060;
+    --common-clr: #9ca3af;
+    --rare-clr: #60a5fa;
+    --epic-clr: #c084fc;
+    --legendary-clr: #fbbf24;
+    --shadow-gold: 0 0 30px rgba(201,168,76,0.25);
+}
+
+.drop-page {
+    font-family: 'Crimson Pro', Georgia, serif;
+    background: var(--bg-void);
+    min-height: 100vh;
+    color: var(--text-ivory);
+    padding: 2rem 1rem 4rem;
+}
+
+/* ── HEADER ── */
+.drop-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+}
+
+    .drop-header::before {
+        content: '';
+        display: block;
+        width: 180px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        margin: 0 auto 1.2rem;
+    }
+
+.drop-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: .18em;
+    text-shadow: 0 0 40px rgba(232,201,109,.35);
+    margin: 0 0 .4rem;
+}
+
+.drop-subtitle {
+    font-family: 'Crimson Pro', serif;
+    font-size: .95rem;
+    color: var(--text-muted);
+    letter-spacing: .12em;
+    font-style: italic;
+}
+
+.drop-header::after {
+    content: '';
+    display: block;
+    width: 180px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 1.2rem auto 0;
+}
+
+/* ── DROP BUTTON ── */
+.drop-btn-wrap {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.drop-btn {
+    font-family: 'Cinzel', serif;
+    font-size: .85rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--bg-void);
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dim) 100%);
+    border: none;
+    padding: .75rem 2.5rem;
+    cursor: pointer;
+    position: relative;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: filter .2s, transform .15s;
+    box-shadow: 0 4px 24px rgba(201,168,76,.35);
+}
+
+    .drop-btn:hover:not(:disabled) {
+        filter: brightness(1.15);
+        transform: translateY(-1px);
+    }
+
+    .drop-btn:disabled {
+        opacity: .5;
+        cursor: not-allowed;
+    }
+
+/* ── CARDS GRID ── */
+.cards-grid {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ── CARD SLOT ── */
+.card-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .9rem;
+    animation: slotReveal .5s ease both;
+}
+
+@keyframes slotReveal {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ── THE CARD ITSELF ── */
+.card-wrap {
+    position: relative;
+    width: 220px;
+    height: 308px;
+    cursor: default;
+    transition: transform .3s ease;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+    .card-wrap:hover {
+        transform: translateY(-6px) scale(1.02);
+    }
+
+/* Character image fills the card */
+.card-art {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 90%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+/* Gradient overlays */
+.card-gradient-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    z-index: 2;
+}
+
+.card-gradient-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    z-index: 2;
+}
+
+/* Frame sits on top — its border naturally masks the art edges */
+.card-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    pointer-events: none;
+    z-index: 20;
+    filter: drop-shadow(0 4px 20px rgba(0,0,0,.8));
+}
+
+/* ── SHARED SCROLL / PARCHMENT TEXTURE ── */
+.card-name,
+.card-series {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E"), linear-gradient(180deg, #4a3218 0%, #5c3d1e 25%, #6b4826 55%, #4e3319 100%);
+    background-blend-mode: overlay, normal;
+    box-shadow: inset 0 1px 0 rgba(255,220,140,.18), inset 0 -1px 0 rgba(0,0,0,.45), 0 2px 10px rgba(0,0,0,.6);
+    border-top: 1px solid rgba(210,170,90,.28);
+    border-bottom: 1px solid rgba(0,0,0,.50);
+}
+
+/* ── NAME BAR (top) ── */
+.card-name {
+    position: absolute;
+    top: 1rem;
+    left: 18px;
+    right: 18px;
+    z-index: 15;
+    padding: .45rem .6rem .4rem;
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    color: #f5e6c0;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.3;
+    border-radius: 3px;
+    text-shadow: 0 1px 0 rgba(0,0,0,.9), 0 0 8px rgba(0,0,0,.7);
+}
+
+/* ── SERIES BAR (bottom) ── */
+.card-series {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 18px;
+    right: 18px;
+    z-index: 15;
+    padding: .4rem .6rem .45rem;
+    text-align: center;
+    font-family: 'Crimson Pro', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: #e8d5a8;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.3;
+    border-radius: 3px;
+    text-shadow: 0 1px 0 rgba(0,0,0,.9), 0 0 8px rgba(0,0,0,.7);
+}
+
+/* ── RARITY ── */
+.rarity-badge {
+    font-family: 'Cinzel', serif;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    padding: .2rem .8rem;
+    border: 1px solid currentColor;
+    opacity: .9;
+}
+
+.rarity-common {
+    color: var(--common-clr);
+    border-color: #4b5563;
+}
+
+.rarity-rare {
+    color: var(--rare-clr);
+    border-color: #1d4ed8;
+}
+
+.rarity-epic {
+    color: var(--epic-clr);
+    border-color: #7e22ce;
+}
+
+.rarity-legendary {
+    color: var(--legendary-clr);
+    border-color: #92400e;
+    text-shadow: 0 0 12px rgba(251,191,36,.5);
+}
+
+/* ── RARE: steel plate ── */
+.rarity-rare-card .card-name,
+.rarity-rare-card .card-series {
+    background: linear-gradient(180deg, rgba(10,20,50,.92) 0%, rgba(15,30,70,.88) 50%, rgba(8,16,42,.95) 100%);
+    border-top: 1px solid rgba(96,165,250,.4);
+    border-bottom: 1px solid rgba(29,78,216,.35);
+    box-shadow: inset 0 1px 0 rgba(96,165,250,.22), inset 0 -1px 0 rgba(0,0,0,.6), 0 2px 14px rgba(0,0,0,.7);
+}
+
+.rarity-rare-card .card-name {
+    color: #bfdbfe;
+    text-shadow: 0 0 12px rgba(96,165,250,.45), 0 1px 0 rgba(0,0,0,.9);
+    letter-spacing: .07em;
+}
+
+.rarity-rare-card .card-series {
+    color: #93c5fd;
+    text-shadow: 0 0 10px rgba(96,165,250,.3), 0 1px 0 rgba(0,0,0,.9);
+}
+
+    .rarity-rare-card .card-name::before, .rarity-rare-card .card-name::after,
+    .rarity-rare-card .card-series::before, .rarity-rare-card .card-series::after {
+        content: '·';
+        color: rgba(96,165,250,.6);
+        font-size: .7rem;
+        margin: 0 .3rem;
+        vertical-align: middle;
+    }
+
+
+/* ── EPIC: arcane void ── */
+.rarity-epic-card .card-name,
+.rarity-epic-card .card-series {
+    background: linear-gradient(180deg, rgba(30,10,55,.95) 0%, rgba(45,15,75,.9) 50%, rgba(25,8,48,.97) 100%);
+    border-top: 1px solid rgba(192,132,252,.45);
+    border-bottom: 1px solid rgba(126,34,206,.4);
+    box-shadow: inset 0 1px 0 rgba(192,132,252,.28), inset 0 -1px 0 rgba(0,0,0,.65), 0 2px 16px rgba(0,0,0,.8);
+}
+
+.rarity-epic-card .card-name {
+    color: #e9d5ff;
+    letter-spacing: .08em;
+    text-shadow: 0 0 16px rgba(192,132,252,.55), 0 0 6px rgba(192,132,252,.25), 0 1px 0 rgba(0,0,0,.95);
+}
+
+.rarity-epic-card .card-series {
+    color: #d8b4fe;
+    text-shadow: 0 0 12px rgba(192,132,252,.4), 0 1px 0 rgba(0,0,0,.9);
+}
+
+.rarity-epic-card .card-name::before, .rarity-epic-card .card-name::after {
+    content: '✦';
+    color: rgba(192,132,252,.5);
+    font-size: .55rem;
+    margin: 0 .35rem;
+    vertical-align: middle;
+}
+
+.rarity-epic-card .card-series::before, .rarity-epic-card .card-series::after {
+    content: '◇';
+    color: rgba(192,132,252,.4);
+    font-size: .5rem;
+    margin: 0 .3rem;
+    vertical-align: middle;
+}
+
+
+/* ── LEGENDARY: gilded divine ── */
+.rarity-legendary-card .card-name,
+.rarity-legendary-card .card-series {
+    background: linear-gradient(180deg, rgba(55,35,5,.97) 0%, rgba(80,52,8,.92) 30%, rgba(95,63,10,.88) 60%, rgba(55,35,5,.97) 100%);
+    border-top: 1px solid rgba(251,191,36,.55);
+    border-bottom: 1px solid rgba(120,80,0,.6);
+    box-shadow: inset 0 1px 0 rgba(251,191,36,.35), inset 0 -1px 0 rgba(0,0,0,.7), inset 1px 0 0 rgba(201,168,76,.1), inset -1px 0 0 rgba(201,168,76,.1), 0 2px 18px rgba(0,0,0,.85);
+}
+
+.rarity-legendary-card .card-name {
+    color: #fef3c7;
+    letter-spacing: .1em;
+    font-size: .95rem;
+    text-shadow: 0 0 20px rgba(251,191,36,.6), 0 0 8px rgba(201,168,76,.35), 0 1px 0 rgba(0,0,0,.95);
+}
+
+.rarity-legendary-card .card-series {
+    color: #fde68a;
+    text-shadow: 0 0 14px rgba(251,191,36,.4), 0 1px 0 rgba(0,0,0,.9);
+}
+
+.rarity-legendary-card .card-name::before, .rarity-legendary-card .card-name::after {
+    content: '✦';
+    color: rgba(251,191,36,.65);
+    font-size: .6rem;
+    margin: 0 .35rem;
+    vertical-align: middle;
+}
+
+.rarity-legendary-card .card-series::before, .rarity-legendary-card .card-series::after {
+    content: '◈';
+    color: rgba(201,168,76,.55);
+    font-size: .55rem;
+    margin: 0 .3rem;
+    vertical-align: middle;
+}
+
+/* ── CLAIM BUTTON ── */
+.claim-btn {
+    font-family: 'Cinzel', serif;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    width: 220px;
+    padding: .55rem 0;
+    border: 1px solid var(--gold-dim);
+    background: transparent;
+    color: var(--gold-light);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: color .2s, background .2s, border-color .2s;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+
+    .claim-btn::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+        opacity: 0;
+        transition: opacity .2s;
+    }
+
+    .claim-btn:hover::before {
+        opacity: 1;
+    }
+
+    .claim-btn:hover {
+        color: var(--bg-void);
+        border-color: var(--gold-light);
+    }
+
+    .claim-btn span {
+        position: relative;
+        z-index: 1;
+    }
+
+/* ── SKELETON CARD ── */
+.card-skeleton {
+    width: 220px;
+    height: 308px;
+    background: linear-gradient(135deg, #111422 0%, #1a1d2e 50%, #111422 100%);
+    background-size: 200% 200%;
+    animation: shimmer 1.8s ease infinite;
+    border-radius: 6px;
+    border: 1px solid #1e2138;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 50%;
+    }
+
+    100% {
+        background-position: -200% 50%;
+    }
+}
+
+/* ── MESSAGE ── */
+.claim-message {
+    text-align: center;
+    margin-top: 3rem;
+    font-family: 'Cinzel', serif;
+    font-size: .9rem;
+    letter-spacing: .14em;
+    color: var(--gold-light);
+    animation: msgFade .5s ease;
+}
+
+@keyframes msgFade {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.claim-message .check {
+    font-size: 1.2rem;
+    margin-right: .4rem;
+}
+
+/* ── DIVIDER ── */
+.ornament-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .8rem;
+    margin-bottom: 2.8rem;
+}
+
+    .ornament-divider::before,
+    .ornament-divider::after {
+        content: '';
+        flex: 1;
+        max-width: 120px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--gold-dim));
+    }
+
+    .ornament-divider::after {
+        background: linear-gradient(90deg, var(--gold-dim), transparent);
+    }
+
+.ornament-diamond {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    opacity: .7;
+}

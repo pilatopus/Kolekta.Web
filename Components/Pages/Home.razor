@@ -1,0 +1,441 @@
+﻿@page "/"
+
+<style>
+    .home-wrap {
+        min-height: calc(100vh - 4rem);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .home-glow-top {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 220px;
+        background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,.09) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .home-glow-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 540px;
+        height: 340px;
+        background: radial-gradient(ellipse, rgba(201,168,76,.04) 0%, transparent 65%);
+        pointer-events: none;
+    }
+
+    .home-corner {
+        position: absolute;
+        width: 52px;
+        height: 52px;
+        opacity: .25;
+    }
+
+        .home-corner.tl {
+            top: 1.8rem;
+            left: 1.8rem;
+            border-top: 1px solid #c9a84c;
+            border-left: 1px solid #c9a84c;
+        }
+
+        .home-corner.tr {
+            top: 1.8rem;
+            right: 1.8rem;
+            border-top: 1px solid #c9a84c;
+            border-right: 1px solid #c9a84c;
+        }
+
+        .home-corner.bl {
+            bottom: 1.8rem;
+            left: 1.8rem;
+            border-bottom: 1px solid #c9a84c;
+            border-left: 1px solid #c9a84c;
+        }
+
+        .home-corner.br {
+            bottom: 1.8rem;
+            right: 1.8rem;
+            border-bottom: 1px solid #c9a84c;
+            border-right: 1px solid #c9a84c;
+        }
+
+    .home-center {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        padding: 3rem 2rem;
+        max-width: 560px;
+    }
+
+    /* ── EYEBROW ── */
+    .home-eyebrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .75rem;
+        font-family: 'Cinzel', serif;
+        font-size: .62rem;
+        letter-spacing: .35em;
+        color: #7a5f28;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+    }
+
+    .home-eyebrow-line {
+        width: 40px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #7a5f28);
+    }
+
+        .home-eyebrow-line.rev {
+            background: linear-gradient(90deg, #7a5f28, transparent);
+        }
+
+    /* ── LOGO ── */
+    .home-logo {
+        font-family: 'Cinzel Decorative', serif;
+        font-size: clamp(2.4rem, 6vw, 3.8rem);
+        font-weight: 700;
+        color: #e8c96d;
+        letter-spacing: .22em;
+        line-height: 1;
+        text-shadow: 0 0 60px rgba(232,201,109,.22), 0 0 120px rgba(232,201,109,.08);
+    }
+
+    .home-tagline {
+        font-family: 'Crimson Pro', serif;
+        font-size: 1.05rem;
+        font-style: italic;
+        color: #7a7060;
+        letter-spacing: .12em;
+        margin-top: .65rem;
+    }
+
+    /* ── ORNAMENT ── */
+    .home-ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        margin: 2rem auto;
+    }
+
+    .home-orn-line {
+        width: 64px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(201,168,76,.25));
+    }
+
+        .home-orn-line.rev {
+            background: linear-gradient(90deg, rgba(201,168,76,.25), transparent);
+        }
+
+    .home-orn-diamond {
+        width: 5px;
+        height: 5px;
+        background: #7a5f28;
+        transform: rotate(45deg);
+    }
+
+    /* ── RARITY HUNT STRIP ── */
+    .home-rarity-strip {
+        display: flex;
+        justify-content: center;
+        gap: .5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .home-rarity-pill {
+        font-family: 'Cinzel', serif;
+        font-size: .58rem;
+        font-weight: 700;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        padding: .28rem .85rem;
+        border: 1px solid currentColor;
+        border-radius: 2px;
+        opacity: .82;
+    }
+
+    .pill-common {
+        color: #9ca3af;
+        border-color: #4b5563;
+    }
+
+    .pill-rare {
+        color: #60a5fa;
+        border-color: #1d4ed8;
+    }
+
+    .pill-epic {
+        color: #c084fc;
+        border-color: #7e22ce;
+    }
+
+    .pill-legendary {
+        color: #fbbf24;
+        border-color: #92400e;
+        text-shadow: 0 0 10px rgba(251,191,36,.45);
+        animation: pillPulse 2.8s ease-in-out infinite;
+    }
+
+    @@keyframes pillPulse {
+        0%, 100% {
+            opacity: .82;
+        }
+
+        50% {
+            opacity: 1;
+            box-shadow: 0 0 12px rgba(251,191,36,.25);
+        }
+    }
+
+    /* ── LORE ── */
+    .home-lore {
+        font-family: 'Crimson Pro', serif;
+        font-size: .98rem;
+        font-style: italic;
+        color: #5a5248;
+        letter-spacing: .03em;
+        line-height: 1.85;
+        margin-bottom: .6rem;
+    }
+
+    .home-lore-note {
+        font-family: 'Crimson Pro', serif;
+        font-size: .82rem;
+        color: #3a3830;
+        letter-spacing: .04em;
+        margin-bottom: 2.2rem;
+    }
+
+    /* ── BUTTONS ── */
+    .home-btns {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 2.8rem;
+    }
+
+    .home-btn {
+        font-family: 'Cinzel', serif;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: .78rem 2.1rem;
+        border-radius: 3px;
+        transition: all .25s;
+        display: inline-block;
+        clip-path: polygon(7px 0%, 100% 0%, calc(100% - 7px) 100%, 0% 100%);
+    }
+
+    .home-btn-primary {
+        background: transparent;
+        color: #e8c96d;
+        border: 1px solid rgba(201,168,76,.55);
+        box-shadow: inset 0 0 20px rgba(201,168,76,.04);
+    }
+
+        .home-btn-primary:hover {
+            background: rgba(201,168,76,.1);
+            border-color: #c9a84c;
+            box-shadow: 0 0 24px rgba(201,168,76,.14);
+            color: #f5d97a;
+        }
+
+    .home-btn-secondary {
+        background: transparent;
+        color: #7a7060;
+        border: 1px solid rgba(255,255,255,.07);
+    }
+
+        .home-btn-secondary:hover {
+            background: rgba(255,255,255,.03);
+            border-color: rgba(255,255,255,.12);
+            color: #9a9080;
+        }
+
+    /* ── RUNE TRIO ── */
+    .home-runes {
+        display: flex;
+        gap: 2.5rem;
+        justify-content: center;
+        margin-bottom: 2.8rem;
+    }
+
+    .home-rune {
+        text-align: center;
+    }
+
+    .home-rune-icon {
+        font-size: 1.05rem;
+        color: #7a5f28;
+        display: block;
+    }
+
+    .home-rune-text {
+        font-family: 'Cinzel', serif;
+        font-size: .55rem;
+        letter-spacing: .16em;
+        color: #3a3830;
+        margin-top: .3rem;
+        text-transform: uppercase;
+        display: block;
+    }
+
+    /* ── DIVIDER THIN ── */
+    .home-thin-rule {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(201,168,76,.1), transparent);
+        margin-bottom: 1.6rem;
+    }
+
+    /* ── DISCLAIMER ── */
+    .home-disclaimer {
+        font-family: 'Crimson Pro', serif;
+        font-size: .72rem;
+        color: #3a3830;
+        line-height: 1.75;
+        letter-spacing: .02em;
+        text-align: center;
+    }
+
+    .home-disclaimer-badge {
+        display: inline-block;
+        font-family: 'Cinzel', serif;
+        font-size: .52rem;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: #7a5f28;
+        border: 1px solid rgba(201,168,76,.15);
+        padding: .18rem .7rem;
+        border-radius: 2px;
+        margin-bottom: .75rem;
+    }
+
+    .home-disclaimer a {
+        color: #c9a84c;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(201,168,76,.3);
+        transition: color .2s, border-color .2s;
+    }
+
+        .home-disclaimer a:hover {
+            color: #e8c96d;
+            border-bottom-color: rgba(232,201,109,.6);
+        }
+
+    .home-kofi-line {
+        margin-top: .85rem;
+        padding-top: .85rem;
+        border-top: 1px solid rgba(201,168,76,.08);
+        font-size: .75rem;
+        color: #4a4540;
+    }
+
+    .home-kofi-link {
+        font-family: 'Cinzel', serif;
+        font-size: .63rem;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: #c9a84c !important;
+        border-bottom: 1px solid rgba(201,168,76,.35) !important;
+    }
+</style>
+
+<div class="home-wrap">
+
+    <div class="home-glow-top"></div>
+    <div class="home-glow-center"></div>
+
+    <div class="home-corner tl"></div>
+    <div class="home-corner tr"></div>
+    <div class="home-corner bl"></div>
+    <div class="home-corner br"></div>
+
+    <div class="home-center">
+
+        <div class="home-eyebrow">
+            <span class="home-eyebrow-line rev"></span>
+            No Login · Free to Play
+            <span class="home-eyebrow-line"></span>
+        </div>
+
+        <div class="home-logo">Kolekta</div>
+        <div class="home-tagline">Drop. Collect.</div>
+
+        <div class="home-ornament">
+            <div class="home-orn-line rev"></div>
+            <div class="home-orn-diamond"></div>
+            <div class="home-orn-diamond"></div>
+            <div class="home-orn-diamond"></div>
+            <div class="home-orn-line"></div>
+        </div>
+
+        <!-- Rarity hunt strip -->
+        <div class="home-rarity-strip">
+            <span class="home-rarity-pill pill-common">Common</span>
+            <span class="home-rarity-pill pill-rare">Rare</span>
+            <span class="home-rarity-pill pill-epic">Epic</span>
+            <span class="home-rarity-pill pill-legendary">✦ Legendary</span>
+        </div>
+
+        <p class="home-lore">
+            Three cards fall from the arena each drop.<br />
+            Claim one, build your collection, and hunt<br />
+            for the elusive Legendary.
+        </p>
+
+        <p class="home-lore-note">No account needed — just drop and collect.</p>
+
+        <div class="home-btns">
+            <a href="/drop" class="home-btn home-btn-primary">✦ Start Dropping</a>
+            <a href="/inventory" class="home-btn home-btn-secondary">◈ View Collection</a>
+        </div>
+
+        <div class="home-runes">
+            <div class="home-rune">
+                <span class="home-rune-icon">✦</span>
+                <span class="home-rune-text">Drop</span>
+            </div>
+            <div class="home-rune">
+                <span class="home-rune-icon">◈</span>
+                <span class="home-rune-text">Claim</span>
+            </div>
+            <div class="home-rune">
+                <span class="home-rune-icon">⌂</span>
+                <span class="home-rune-text">Collect</span>
+            </div>
+        </div>
+
+        <div class="home-thin-rule"></div>
+
+        <div class="home-disclaimer">
+            <div class="home-disclaimer-badge">Demo Project</div><br />
+            This is a personal fan-made showcase built for fun and learning.<br />
+            All third-party content — characters, images, game assets, logos,<br />
+            and related marks — remain the property of their respective owners.<br />
+            No copyright infringement is intended. Not for commercial use.
+
+            <div class="home-kofi-line">
+                Enjoying the project? Feel free to dm me —<br />
+                <a href="https://discord.com/users/1384158791976878176" target="_blank" class="home-kofi-link">✉ Discord</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>

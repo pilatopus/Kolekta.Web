@@ -1,0 +1,8 @@
+﻿@import "tailwindcss";
+.nav-btn {
+    @apply block px-3 py-2 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition;
+}
+
+    .nav-btn.active {
+    @apply bg-purple-600 text-white;
+    }
