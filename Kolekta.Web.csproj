@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="Models\Drops\" />
+    <Folder Include="publish\wwwroot\Components\Layout\" />
   </ItemGroup>
 
   <ItemGroup>
