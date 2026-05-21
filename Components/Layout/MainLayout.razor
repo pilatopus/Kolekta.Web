@@ -1,31 +1,54 @@
 ﻿@inherits LayoutComponentBase
+
+<!-- ── MOBILE BACKDROP ── -->
+<div class="nav-backdrop @(navOpen ? "open" : "")"
+     @onclick="CloseNav"></div>
+
+<!-- ── MOBILE TOP BAR ── -->
+<header class="topbar">
+    <div class="topbar-brand">Kolekta</div>
+
+    <button class="hamburger @(navOpen ? "open" : "")"
+            @onclick="ToggleNav"
+            aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</header>
+
+<!-- ── SHELL ── -->
 <div class="shell">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <!-- SIDEBAR / DRAWER -->
+    <aside class="sidebar @(navOpen ? "open" : "")">
 
         <!-- Brand -->
         <div class="brand">
-            <div class="brand-name">Kolekta</div>
-            <div class="brand-sub">card drop game</div>
-            <span class="brand-line"></span>
+            <div class="brand-text">
+                <div class="brand-name">Kolekta</div>
+                <div class="brand-sub">card drop game</div>
+                <span class="brand-line"></span>
+            </div>
+            <!-- mobile close button -->
+            <button class="sidebar-close" @onclick="CloseNav" aria-label="Close navigation">✕</button>
         </div>
 
         <!-- Nav -->
         <nav class="sidebar-nav">
             <div class="nav-label">Navigate</div>
 
-            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All" @onclick="CloseNav">
                 <span class="nav-icon">⌂</span>
                 <span>Home</span>
             </NavLink>
 
-            <NavLink class="nav-link" href="/drop">
+            <NavLink class="nav-link" href="/drop" @onclick="CloseNav">
                 <span class="nav-icon">✦</span>
                 <span>Drop Arena</span>
             </NavLink>
 
-            <NavLink class="nav-link" href="/inventory">
+            <NavLink class="nav-link" href="/inventory" @onclick="CloseNav">
                 <span class="nav-icon">◈</span>
                 <span>Collection</span>
             </NavLink>
@@ -43,7 +66,7 @@
 
     </aside>
 
-    <!-- MAIN -->
+    <!-- MAIN CONTENT -->
     <main class="main-content">
         <div class="main-inner">
             @Body
@@ -51,3 +74,10 @@
     </main>
 
 </div>
+
+@code {
+    private bool navOpen = false;
+
+    private void ToggleNav() => navOpen = !navOpen;
+    private void CloseNav() => navOpen = false;
+}

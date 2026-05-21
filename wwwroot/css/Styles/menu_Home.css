@@ -1,4 +1,4 @@
-﻿@@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap');
 
 *, *::before, *::after {
     box-sizing: border-box;
@@ -20,10 +20,8 @@
     --text-ivory: #f0e8d0;
     --text-muted: #7a7060;
     --text-ghost: #3a3830;
-    --common-clr: #9ca3af;
-    --rare-clr: #60a5fa;
-    --epic-clr: #c084fc;
-    --legendary-clr: #fbbf24;
+    --sidebar-w: 220px;
+    --topbar-h: 56px;
 }
 
 html, body {
@@ -33,25 +31,48 @@ html, body {
     font-family: 'Crimson Pro', Georgia, serif;
 }
 
-/* ── SHELL ── */
+/* ═══════════════════════════
+       SHELL
+    ═══════════════════════════ */
 .shell {
     display: flex;
     min-height: 100vh;
 }
 
-/* ── SIDEBAR ── */
+/* ═══════════════════════════
+       BACKDROP (mobile only)
+    ═══════════════════════════ */
+.nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.65);
+    z-index: 40;
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity .28s ease;
+}
+
+    .nav-backdrop.open {
+        opacity: 1;
+    }
+
+/* ═══════════════════════════
+       SIDEBAR (desktop default)
+    ═══════════════════════════ */
 .sidebar {
-    width: 220px;
+    width: var(--sidebar-w);
     flex-shrink: 0;
     background: var(--bg-sidebar);
     border-right: 1px solid var(--border-dim);
     display: flex;
     flex-direction: column;
     position: relative;
-    z-index: 10;
+    z-index: 50;
+    transition: transform .28s cubic-bezier(.4,0,.2,1);
 }
 
-    /* subtle vertical grain line for depth */
+    /* gold grain line on right edge */
     .sidebar::after {
         content: '';
         position: absolute;
@@ -67,12 +88,19 @@ html, body {
 .brand {
     padding: 1.6rem 1.4rem 1.2rem;
     border-bottom: 1px solid var(--border-dim);
-    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: .5rem;
+}
+
+.brand-text {
+    flex: 1;
 }
 
 .brand-name {
     font-family: 'Cinzel Decorative', serif;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--gold-light);
     letter-spacing: .16em;
@@ -98,6 +126,25 @@ html, body {
     opacity: .5;
 }
 
+/* Close button — only visible on mobile inside drawer */
+.sidebar-close {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: .2rem .3rem;
+    line-height: 1;
+    transition: color .2s;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+    .sidebar-close:hover {
+        color: var(--gold-light);
+    }
+
 /* ── NAV ── */
 .sidebar-nav {
     flex: 1;
@@ -120,7 +167,7 @@ html, body {
     display: flex;
     align-items: center;
     gap: .7rem;
-    padding: .55rem .8rem;
+    padding: .6rem .8rem;
     font-family: 'Cinzel', serif;
     font-size: .72rem;
     font-weight: 600;
@@ -140,7 +187,6 @@ html, body {
         border-color: var(--border-dim);
     }
 
-    /* Blazor adds .active class on active NavLink */
     .nav-link.active {
         color: var(--gold-light);
         background: linear-gradient(90deg, rgba(201,168,76,.12) 0%, transparent 100%);
@@ -191,16 +237,144 @@ html, body {
     opacity: .5;
 }
 
-/* ── MAIN CONTENT ── */
+/* ═══════════════════════════
+       MOBILE TOP BAR
+    ═══════════════════════════ */
+.topbar {
+    display: none; /* hidden on desktop */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--topbar-h);
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border-dim);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    z-index: 30;
+}
+
+    /* gold grain line bottom of topbar */
+    .topbar::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, var(--gold-dim) 30%, var(--gold-dim) 70%, transparent 100%);
+        opacity: .5;
+    }
+
+.topbar-brand {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: .14em;
+    text-shadow: 0 0 20px rgba(232,201,109,.3);
+}
+
+/* hamburger button */
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: 1px solid var(--border-dim);
+    border-radius: 3px;
+    padding: .45rem .55rem;
+    cursor: pointer;
+    transition: border-color .2s;
+}
+
+    .hamburger:hover {
+        border-color: var(--border-mid);
+    }
+
+    .hamburger span {
+        display: block;
+        width: 18px;
+        height: 1.5px;
+        background: var(--gold);
+        border-radius: 1px;
+        transition: transform .22s ease, opacity .18s ease;
+    }
+
+    /* animate to × when open */
+    .hamburger.open span:nth-child(1) {
+        transform: translateY(6.5px) rotate(45deg);
+    }
+
+    .hamburger.open span:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+
+    .hamburger.open span:nth-child(3) {
+        transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+/* ═══════════════════════════
+       MAIN CONTENT
+    ═══════════════════════════ */
 .main-content {
     flex: 1;
     min-width: 0;
     overflow-y: auto;
     background: var(--bg-void);
-    /* subtle radial glow top-center */
     background-image: radial-gradient(ellipse 60% 30% at 50% 0%, rgba(201,168,76,.04) 0%, transparent 70%);
 }
 
 .main-inner {
     padding: 2rem 2rem 4rem;
+    max-width: 1400px;
+}
+
+/* ═══════════════════════════
+       RESPONSIVE — mobile
+    ═══════════════════════════ */
+@media (max-width: 768px) {
+    /* show topbar, hide shell flex row */
+    .topbar {
+        display: flex;
+    }
+
+    .shell {
+        display: block;
+    }
+    /* sidebar becomes a fixed off-canvas drawer */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(280px, 82vw);
+        transform: translateX(-100%);
+        z-index: 50;
+        box-shadow: 4px 0 30px rgba(0,0,0,.6);
+    }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+    /* show backdrop when drawer open */
+    .nav-backdrop {
+        display: block;
+    }
+    /* show close × button inside drawer */
+    .sidebar-close {
+        display: block;
+    }
+    /* main content gets pushed down by topbar */
+    .main-content {
+        padding-top: var(--topbar-h);
+        min-height: 100vh;
+    }
+
+    .main-inner {
+        padding: 1.5rem 1rem 3rem;
+    }
 }
